@@ -1,185 +1,269 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Vortrags-Raumplan</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Gebäude-Zustandsbewertung</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+    color: #1f2937;
+  }
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background: #f4f6f8;
-      color: #1f2937;
-    }
+  .app {
+    max-width: 480px;
+    margin: auto;
+    padding: 16px;
+  }
 
-    .app {
-      min-height: 100vh;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
+  h1 {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
 
-    .card {
-      width: 100%;
-      max-width: 420px;
-      background: white;
-      border-radius: 22px;
-      padding: 22px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-    }
+  .subtitle {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
 
-    h1 {
-      font-size: 24px;
-      margin: 0 0 8px;
-      text-align: center;
-    }
+  .card {
+    background: white;
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  }
 
-    .subtitle {
-      text-align: center;
-      font-size: 15px;
-      color: #6b7280;
-      margin-bottom: 22px;
-    }
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+  }
 
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
-      font-size: 16px;
-    }
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 17px;
+    margin-bottom: 12px;
+  }
 
-    select {
-      width: 100%;
-      font-size: 18px;
-      padding: 14px;
-      border-radius: 14px;
-      border: 1px solid #d1d5db;
-      background: #ffffff;
-      color: #111827;
-      appearance: none;
-      -webkit-appearance: none;
-    }
+  .trade-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
 
-    .result {
-      margin-top: 24px;
-      padding: 18px;
-      border-radius: 16px;
-      background: #eef6ff;
-      border: 1px solid #bfdbfe;
-      text-align: center;
-    }
+  .ratings {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
 
-    .result-title {
-      font-size: 15px;
-      color: #6b7280;
-      margin-bottom: 8px;
-    }
+  .rating-btn {
+    padding: 12px 0;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+  }
 
-    .room {
-      font-size: 28px;
-      font-weight: 800;
-      color: #1d4ed8;
-    }
+  .rating-btn.active {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+  }
 
-    .info {
-      margin-top: 22px;
-      font-size: 14px;
-      color: #6b7280;
-      line-height: 1.4;
-      text-align: center;
-    }
+  .result {
+    font-size: 15px;
+    background: #eef2ff;
+    padding: 12px;
+    border-radius: 12px;
+  }
 
-    button {
-      margin-top: 18px;
-      width: 100%;
-      padding: 14px;
-      font-size: 17px;
-      font-weight: 600;
-      border: none;
-      border-radius: 14px;
-      background: #2563eb;
-      color: white;
-      cursor: pointer;
-    }
+  .price {
+    font-size: 20px;
+    font-weight: 800;
+    margin-top: 4px;
+  }
 
-    button:active {
-      background: #1d4ed8;
-      transform: scale(0.98);
-    }
-  </style>
+  .total {
+    background: #111827;
+    color: white;
+  }
+
+  .total .price {
+    font-size: 28px;
+  }
+
+  .hint {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 6px;
+  }
+</style>
 </head>
 
 <body>
-  <div class="app">
-    <div class="card">
-      <h1>Vortrags-Raumplan</h1>
-      <div class="subtitle">
-        Vortrag auswählen und Raum anzeigen lassen
-      </div>
+<div class="app">
 
-      <label for="talkSelect">Vortrag auswählen</label>
-      <select id="talkSelect" onchange="zeigeRaum()">
-        <option value="">Bitte auswählen</option>
-        <option value="1">Vortrag 1</option>
-        <option value="2">Vortrag 2</option>
-        <option value="3">Vortrag 3</option>
-        <option value="4">Vortrag 4</option>
-        <option value="5">Vortrag 5</option>
-        <option value="6">Vortrag 6</option>
-        <option value="7">Vortrag 7</option>
-        <option value="8">Vortrag 8</option>
-        <option value="9">Vortrag 9</option>
-        <option value="10">Vortrag 10</option>
-      </select>
+  <h1>Gebäude-Zustandsbewertung</h1>
+  <div class="subtitle">Bewertung nach Schulnoten: 1 = sehr gut, 5 = dringend sanierungsbedürftig</div>
 
-      <div class="result" id="resultBox" style="display:none;">
-        <div class="result-title">Zugeordneter Raum</div>
-        <div class="room" id="roomOutput"></div>
-      </div>
+  <div class="card">
+    <label for="area">Grundfläche Gebäude in m²</label>
+    <input id="area" type="number" inputmode="decimal" placeholder="z. B. 600" value="600" oninput="calculateTotal()">
 
-      <button onclick="zuruecksetzen()">Auswahl zurücksetzen</button>
+    <label for="year">Baujahr</label>
+    <input id="year" type="number" inputmode="numeric" placeholder="z. B. 1975" value="1975">
+  </div>
 
-      <div class="info">
-        Vortrag 1–5 sind Raum 1 zugeordnet.<br>
-        Vortrag 6–10 sind Raum 2 zugeordnet.
-      </div>
+  <div id="trades"></div>
+
+  <div class="card total">
+    <div>Geschätzte Optimierungskosten gesamt</div>
+    <div class="price" id="totalPrice">0 €</div>
+    <div class="hint" style="color:#d1d5db;">
+      Grobe Orientierung auf Basis Grundfläche und Zustandsnote.
     </div>
   </div>
 
-  <script>
-    function zeigeRaum() {
-      const auswahl = document.getElementById("talkSelect").value;
-      const resultBox = document.getElementById("resultBox");
-      const roomOutput = document.getElementById("roomOutput");
+</div>
 
-      if (auswahl === "") {
-        resultBox.style.display = "none";
-        roomOutput.textContent = "";
-        return;
-      }
+<script>
+const trades = [
+  {
+    name: "Türen / Hauseingang",
+    base: 18,
+    text: "Optimierung z. B. neue Haustür, Schließanlage, Brandschutztüren, Beschläge."
+  },
+  {
+    name: "Treppenhaus",
+    base: 22,
+    text: "Optimierung z. B. Anstrich, Geländer, Beleuchtung, Bodenbeläge, Sicherheit."
+  },
+  {
+    name: "Dach",
+    base: 55,
+    text: "Optimierung z. B. Dachwartung, Abdichtung, Dämmung, Rinnen, kleinere Sanierung."
+  },
+  {
+    name: "Elektrik",
+    base: 42,
+    text: "Optimierung z. B. Zählerschrank, Leitungen, Unterverteilungen, Beleuchtung."
+  },
+  {
+    name: "Wasserleitungen",
+    base: 38,
+    text: "Optimierung z. B. Steigleitungen, Absperrungen, Dämmung, Leitungserneuerung."
+  }
+];
 
-      const vortragNummer = parseInt(auswahl, 10);
+let ratings = {};
 
-      if (vortragNummer >= 1 && vortragNummer <= 5) {
-        roomOutput.textContent = "Raum 1";
-      } else if (vortragNummer >= 6 && vortragNummer <= 10) {
-        roomOutput.textContent = "Raum 2";
-      }
+function formatEuro(value) {
+  return new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0
+  }).format(value);
+}
 
-      resultBox.style.display = "block";
+function factorForRating(rating) {
+  const factors = {
+    1: 0,
+    2: 0.25,
+    3: 0.55,
+    4: 0.85,
+    5: 1.25
+  };
+  return factors[rating];
+}
+
+function priceForTrade(trade, rating) {
+  const area = Number(document.getElementById("area").value) || 0;
+  return area * trade.base * factorForRating(rating);
+}
+
+function setRating(index, rating) {
+  ratings[index] = rating;
+
+  document.querySelectorAll(`[data-trade="${index}"]`).forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  document.querySelector(`[data-trade="${index}"][data-rating="${rating}"]`).classList.add("active");
+
+  const price = priceForTrade(trades[index], rating);
+  document.getElementById(`price-${index}`).innerText = formatEuro(price);
+
+  calculateTotal();
+}
+
+function calculateTotal() {
+  let total = 0;
+
+  trades.forEach((trade, index) => {
+    const rating = ratings[index] || 3;
+    const price = priceForTrade(trade, rating);
+    total += price;
+
+    const priceElement = document.getElementById(`price-${index}`);
+    if (priceElement) {
+      priceElement.innerText = formatEuro(price);
     }
+  });
 
-    function zuruecksetzen() {
-      document.getElementById("talkSelect").value = "";
-      document.getElementById("resultBox").style.display = "none";
-      document.getElementById("roomOutput").textContent = "";
-    }
-  </script>
+  document.getElementById("totalPrice").innerText = formatEuro(total);
+}
+
+function renderTrades() {
+  const container = document.getElementById("trades");
+
+  trades.forEach((trade, index) => {
+    ratings[index] = 3;
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <div class="trade-title">${trade.name}</div>
+
+      <div class="ratings">
+        ${[1,2,3,4,5].map(rating => `
+          <button 
+            class="rating-btn ${rating === 3 ? "active" : ""}"
+            data-trade="${index}"
+            data-rating="${rating}"
+            onclick="setRating(${index}, ${rating})">
+            ${rating}
+          </button>
+        `).join("")}
+      </div>
+
+      <div class="result">
+        ${trade.text}
+        <div class="price" id="price-${index}">0 €</div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  calculateTotal();
+}
+
+renderTrades();
+</script>
+
 </body>
 </html>
